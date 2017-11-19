@@ -4,10 +4,21 @@
 var DayApp = function () {
     this.workDaysPerWeek = 5;
     this.secondsPerDay = 24 * 60 * 60 * 1000;
-    this.currentDate = new Date();
+    this.currentWorkDaysList = new Array();
 };
 
 
+/**
+ *  Sunday 0
+ *  Monday 1
+ *  Tuesday 1
+ *  Wednesday 1
+ *  Thursday 1
+ *  Friday 1
+ *  Saturday 1
+ * @param date
+ * @returns {Array}
+ */
 DayApp.prototype.getWorkDaysList = function (date) {
     var milliseconds = date.getTime();
     var repackDays = date.getDay() - 1;
@@ -20,66 +31,36 @@ DayApp.prototype.getWorkDaysList = function (date) {
         }
     }
     date.setTime(milliseconds);
-    this.currentDate.setTime(milliseconds);
-    var resultArray = [];
     for (var i = 0; i < this.workDaysPerWeek; i++) {
-        resultArray[i] = new Date(date);
+        this.currentWorkDaysList[i] = new Date(date);
         milliseconds += this.secondsPerDay;
         date.setTime(milliseconds);
     }
-    return resultArray;
+    return this.currentWorkDaysList;
 };
-DayApp.prototype.getNextWorkDaysList = function (date) {
-
-    var milliseconds = date.getTime();
-    var repackDays = date.getDay() - 1;
-    if (repackDays == -1) {
-        // 说明date 是周日
-        milliseconds += this.secondsPerDay;
-    } else {
-        while (repackDays <= 7) {
-            milliseconds += this.secondsPerDay;
-            repackDays++;
+DayApp.prototype.getNextWorkDaysList = function () {
+    for (var i = 0; i <= this.currentWorkDaysList.length; i++) {
+        if (this.currentWorkDaysList[i] instanceof Date) {
+            var m = this.currentWorkDaysList[i].getTime();
+            for (var w = 1; w <= 7; w++) {
+                m += this.secondsPerDay;
+            }
+            this.currentWorkDaysList[i] = new Date(m);
         }
     }
-    date.setTime(milliseconds);
-    this.currentDate.setTime(milliseconds);
-    var resultArray = [];
-    for (var i = 0; i < this.workDaysPerWeek; i++) {
-        resultArray[i] = new Date(date);
-        milliseconds += this.secondsPerDay;
-        date.setTime(milliseconds);
-    }
-    return resultArray;
+    return this.currentWorkDaysList;
 };
-DayApp.prototype.getPreWorkDaysList = function (date) {
+DayApp.prototype.getPreWorkDaysList = function () {
+    for (var i = 0; i <= this.currentWorkDaysList.length; i++) {
+        if (this.currentWorkDaysList[i] instanceof Date) {
+            var m = this.currentWorkDaysList[i].getTime();
+            for (var w = 1; w <= 7; w++) {
+                m -= this.secondsPerDay;
+            }
+            this.currentWorkDaysList[i] = new Date(m);
+        }
+    }
+    return this.currentWorkDaysList;
 
-    var milliseconds = date.getTime();
-    var repackDays = date.getDay() - 1;
-    if (repackDays == -1) {
-        // the date is Sunday
-        while (repackDays < 6) {
-            milliseconds -= this.secondsPerDay;
-            repackDays++;
-        }
-    } else {
-        while (repackDays > -1) {
-            milliseconds -= this.secondsPerDay;
-            repackDays--;
-        }
-        while (repackDays < 6) {
-            milliseconds -= this.secondsPerDay;
-            repackDays++;
-        }
-    }
-    date.setTime(milliseconds);
-    this.currentDate.setTime(milliseconds);
-    var resultArray = [];
-    for (var i = 0; i < this.workDaysPerWeek; i++) {
-        resultArray[i] = new Date(date);
-        milliseconds += this.secondsPerDay;
-        date.setTime(milliseconds);
-    }
-    return resultArray;
 };
 

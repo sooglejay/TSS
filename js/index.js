@@ -42,12 +42,12 @@ $(function () {
     init(daysList);
 
     $("#btnPreWeek").click(function () {
-        var preWeekDaysList = dayApp.getPreWorkDaysList(dayApp.currentDate);
+        var preWeekDaysList = dayApp.getPreWorkDaysList();
         init(preWeekDaysList);
     });
 
     $("#btnNextWeek").click(function () {
-        var nextWeekDaysList = dayApp.getNextWorkDaysList(dayApp.currentDate);
+        var nextWeekDaysList = dayApp.getNextWorkDaysList();
         init(nextWeekDaysList);
     });
 
