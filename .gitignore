@@ -1,4 +1,5 @@
 
+.gitignore
 proxy/
 vendor/doctrine/common/lib/vendor/
 vendor/doctrine/dbal/lib/vendor/
