@@ -10,6 +10,21 @@ function initWorkingDays() {
     }
     $("#timeRanger").html(dayApp.getFormattedTimeSir(dd[0]) + "-" + dayApp.getFormattedTimeSir(dd[dd.length - 1]));
 }
+
+function initDaysSelector() {
+    var hS = '';
+    for (var i = 1; i <= 5; i++) {
+        for (var hours = 1; hours <= 8; hours++) {
+            if (hours > 1) {
+                hS = 'hours';
+            } else {
+                hS = 'hour';
+            }
+            $("#sel_day_" + i).append("<option value=" + hours + ">" + hours + " " + hS + "</option>");
+        }
+    }
+}
 $(function () {
     initWorkingDays();
+    initDaysSelector();
 });
