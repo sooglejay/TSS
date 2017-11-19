@@ -1,19 +1,17 @@
 /**
  * Created by sooglejay on 17/11/19.
  */
-function initWorkingDays() {
-    var dayApp = new DayApp();
-    var dd = dayApp.getWorkDaysList();
-    for (var i = 0; i < dd.length; i++) {
-        var d = dd[i];
+function initWorkingDays(daysList) {
+    for (var i = 0; i < daysList.length; i++) {
+        var d = daysList[i];
         $("#label_day_" + (i + 1)).html((d.getMonth() + 1) + "/" + d.getDate());
     }
-    $("#timeRanger").html(dayApp.getFormattedTimeSir(dd[0]) + "-" + dayApp.getFormattedTimeSir(dd[dd.length - 1]));
 }
 
 function initDaysSelector() {
     var hS = '';
     for (var i = 1; i <= 5; i++) {
+        $("#sel_day_" + i).empty();
         for (var hours = 1; hours <= 8; hours++) {
             if (hours > 1) {
                 hS = 'hours';
@@ -24,7 +22,34 @@ function initDaysSelector() {
         }
     }
 }
-$(function () {
-    initWorkingDays();
+function getFormattedTimeSir(date) {
+    if (date instanceof Date) {
+        return (date.getMonth() + 1) + "/" + (date.getDate()) + "/" + (date.getFullYear());
+    }
+    return "Class Type Not Match Date";
+}
+
+function init(daysList) {
+    // 根据本函数参数daysList来初始化UI
+    initWorkingDays(daysList);
+    $("#timeRanger").html(getFormattedTimeSir(daysList[0]) + "-" + getFormattedTimeSir(daysList[daysList.length - 1]));
+    // 根据网络请求 初始化 selector
     initDaysSelector();
+}
+$(function () {
+    var dayApp = new DayApp();
+    var daysList = dayApp.getWorkDaysList(new Date());
+    init(daysList);
+
+    $("#btnPreWeek").click(function () {
+        var preWeekDaysList = dayApp.getPreWorkDaysList(dayApp.currentDate);
+        init(preWeekDaysList);
+    });
+
+    $("#btnNextWeek").click(function () {
+        var nextWeekDaysList = dayApp.getNextWorkDaysList(dayApp.currentDate);
+        init(nextWeekDaysList);
+    });
+
+
 });
