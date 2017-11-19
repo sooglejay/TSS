@@ -35,7 +35,7 @@
         <thead>
         <tr>
             <th><label class="full-width">Project</label></th>
-            <th><label class="full-width">Task</label></th>
+            <th style="min-width:300px"><label class="full-width">Task</label></th>
 
             <th><label id="label_day_1" class="full-width">11/13</label></th>
             <th><label id="label_day_2" class="full-width">11/14</label></th>
@@ -48,14 +48,14 @@
         <tbody>
         <tr>
             <td>
-                <select id="projectSelector" title="Choose Project">
+                <select id="projectSelector" title="Choose Project" style="min-width: 80%">
                     <option>Schaeffer</option>
                     <option>Schaeffer</option>
                     <option>Schaeffer</option>
                 </select>
             </td>
             <td>
-                <select id="taskSelector" title="Choose Task">
+                <select id="taskSelector" title="Choose Task" style="min-width: 80%">
                     <option>Development</option>
                     <option>Development</option>
                     <option>Development</option>
@@ -86,8 +86,8 @@
     </table>
 
     <div class="pull-right">
-        <button class="btn-primary">Save</button>
-        <button class="btn-success">Submit</button>
+        <button id="btnSave" class="btn-primary">Save</button>
+        <button id="btnSubmit" class="btn-success">Submit</button>
     </div>
 </div>
 <script src="../js/jquery-3.2.0.min.js"></script>
