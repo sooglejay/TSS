@@ -8,26 +8,35 @@ function initWorkingDays(daysList) {
     }
 }
 
-function initDaysSelector(daysList, jj) {
-    $("#sel_day_" + jj).empty();
-    ajaxWrapper('../../controller/MainApp.php', 'POST', {
-        'time': daysList[jj - 1].getTime()
-    }, function (e) {
-        if (e.code == 200) {
-            var hS = e['hours'];
-            if (hS > 1) {
-                hS = hS + ' hours';
+function initDaysSelector(daysList) {
+    function doInitFromWeb(day, jj) {
+        $("#sel_day_" + jj).empty();
+        ajaxWrapper('/getHoursByTime', 'POST', {
+            'time': day.getTime()
+        }, function (e) {
+            if (e.code == 200) {
+                var hS = e['hours'];
+                if (hS > 1) {
+                    hS = hS + ' hours';
+                } else {
+                    hS = hS + 'hour';
+                }
+                $("#sel_day_" + jj).append("<option value=" + e['hours'] + ">" + hS + "</option>");
             } else {
-                hS = hS + 'hour';
-            }
-            $("#sel_day_" + jj).append("<option value=" + e['hours'] + ">" + hS + "</option>");
-        }else{
 
-        }
-    });
+            }
+        }, function (e) {
+            // 如果接口不行，就显示模拟的数据
+            testDaysSelector();
+        });
+    }
+
+    for (var k = 0; k < daysList.length; k++) {
+        doInitFromWeb(daysList[k], k + 1);
+    }
 }
 
-function editDaysSelector() {
+function testDaysSelector() {
     var hS = '';
     for (var i = 1; i <= 5; i++) {
         $("#sel_day_" + i).empty();

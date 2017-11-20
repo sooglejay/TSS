@@ -1,5 +1,6 @@
 <?php
 namespace TSS;
+require_once dirname(__FILE__) . '/../model/Task.php';
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;

@@ -1,5 +1,9 @@
 <?php
 namespace TSS;
+require_once dirname(__FILE__) . '/../model/Task.php';
+require_once dirname(__FILE__) . '/../model/Project.php';
+require_once dirname(__FILE__) . '/../model/User.php';
+require_once dirname(__FILE__) . '/../model/Department.php';
 
 use Doctrine\ORM\EntityRepository;
 

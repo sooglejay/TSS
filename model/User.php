@@ -1,5 +1,6 @@
 <?php
 namespace TSS;
+require_once dirname(__FILE__) . '/../model/Department.php';
 
 use Doctrine\ORM\EntityRepository;
 
@@ -10,7 +11,7 @@ ini_set('date.timezone', 'Asia/Shanghai');
  * User: sooglejay
  * Date: 17/11/19
  * Time: 19:44
- * @Entity(repositoryClass="UserRepository")
+ * @Entity(repositoryClass="TssUserRepository")
  * @Table(name="tss_user")
  */
 class User
@@ -37,7 +38,7 @@ class User
     protected $password;
 
     /**
-     * @ManyToOne(targetEntity="Department",inversedBy="users")
+     * @ManyToOne(targetEntity="Department")
      * @JoinColumn(name="department_id", referencedColumnName="id")
      * @var
      */
@@ -148,13 +149,12 @@ class User
     }
 }
 
-class UserRepository extends EntityRepository
+class TssUserRepository extends EntityRepository
 {
 
     public function saveUser($displayName, $gid, $password, $email, $departmentName)
     {
-        $departmentEntity = $this->_em->getRepository('Department')->findOneBy(array('departmentName' => $departmentName));
-
+        $departmentEntity = $this->_em->getRepository('TSS\Department')->findOneBy(array('departmentName' => $departmentName));
         if ($departmentEntity instanceof Department) {
             $userEntity = new User();
             $userEntity->setDisplayName($displayName)
@@ -162,10 +162,11 @@ class UserRepository extends EntityRepository
                 ->setGid($gid)
                 ->setPassword($password)
                 ->setDepartment($departmentEntity);
-            $departmentEntity->addUsers($userEntity);
             $this->_em->persist($userEntity);
-            $this->_em->persist($departmentEntity);
             $this->_em->flush();
+            echo 1;
+        } else {
+            echo 2;
         }
     }
 

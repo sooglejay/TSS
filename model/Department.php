@@ -3,6 +3,7 @@ namespace TSS;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+require_once dirname(__FILE__) . '/../model/User.php';
 
 ini_set('date.timezone', 'Asia/Shanghai');
 
@@ -24,20 +25,6 @@ class Department
      * @var
      */
     protected $departmentName;
-
-    /**
-     * @OneToMany(targetEntity="User",mappedBy="department")
-     */
-    protected $users;
-
-    /**
-     * Project constructor.
-     */
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
-
     /**
      * @return mixed
      */
@@ -61,23 +48,6 @@ class Department
     {
         $this->departmentName = $departmentName;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
-    /**
-     * @param User $users
-     */
-    public function addUsers($users)
-    {
-        $this->users = $users;
-    }
-
 }
 
 class DepartmentRepository extends EntityRepository
