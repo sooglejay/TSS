@@ -1,5 +1,5 @@
 /**
- * Created by sooglejay on 17/11/19.
+ * Created by Johnny on 17/11/19.
  */
 
 function ajaxWrapper(url, method, data, successCallback, errorCallback) {

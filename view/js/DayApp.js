@@ -1,5 +1,5 @@
 /**
- * Created by sooglejay on 17/11/19.
+ * Created by Johnny on 17/11/19.
  */
 var DayApp = function () {
     this.workDaysPerWeek = 5;
