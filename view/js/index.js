@@ -52,21 +52,12 @@ function getWeekId(daysList) {
 
 /**
  * 查询最近的5个工作日的项目和任务清空
- * @param weekId
+ * @param weekId 这个参数用来定位某一周
  */
 function initDaysFromWebData(weekId) {
     $.getJSON("./../../data.json", {weekId: weekId}, function (data) {
-        console.log(data);
-        //each循环遍历一周的json数据. i 表示周几的迭代
-        // $.each(data['work'], function (i, item) {
-        //     //该工作日的项目
-        //     $.each(item['projects'], function (i, item) {
-        //         // document.write(item);
-        //     });
-        // });
         initWorkTable(data);
     });
-
 }
 /**
  * 填充模拟数据，用于测试
