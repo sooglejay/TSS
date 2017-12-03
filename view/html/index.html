@@ -12,6 +12,17 @@
     <link rel="stylesheet" type="text/css" href="../../lib/select/css/select2.css">
     <link rel="stylesheet" type="text/css" href="../../lib/select/css/select2-bootstrap.css">
     <title>Bootstrap Table by sooglejay</title>
+    <style type="text/css">
+        .fixed-table-body {
+            overflow-x: auto;
+            overflow-y: auto;
+            height: auto;
+        }
+        .select2-container-multi .select2-choices .select2-search-choice {
+            display: inline-block;
+            clear: both;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -26,8 +37,17 @@
             <label class="glyphicon glyphicon-forward"></label>
         </button>
     </div>
+
+
     <table id="table">
     </table>
+
+    <div style="margin-top: 12px" align="center">
+        <button id="btnAddRow" class="btn-default pull-left">
+            <label class="glyphicon glyphicon-plus"></label>
+            Add Project
+        </button>
+    </div>
 </div>
 
 <script type="text/javascript" src="../../lib/bootstrap-table/js/bootstrap-table.min.js"></script>

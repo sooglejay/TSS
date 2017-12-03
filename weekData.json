@@ -3,7 +3,6 @@
   "work": [
     {
       "stamp": 1511764230000,
-      "hour": 8,
       "projects": [
         {
           "projectName": "这是项目一",
@@ -11,11 +10,13 @@
           "tasks": [
             {
               "taskId": 1,
-              "taskName": "这是项目一的任务1"
+              "taskName": "这是项目一的任务1",
+              "hour": 0.30
             },
             {
               "taskId": 2,
-              "taskName": "这是项目一的任务2"
+              "taskName": "这是项目一的任务2",
+              "hour": 0.30
             }
           ]
         },
@@ -25,11 +26,13 @@
           "tasks": [
             {
               "taskId": 3,
-              "taskName": "这是项目二的任务，任务Id是3"
+              "taskName": "这是项目二的任务，任务Id是3",
+              "hour": 0.30
             },
             {
               "taskId": 4,
-              "taskName": "这是项目二的任务，任务Id是4"
+              "taskName": "这是项目二的任务，任务Id是4",
+              "hour": 1.30
             }
           ]
         }
@@ -45,11 +48,13 @@
           "tasks": [
             {
               "taskId": 5,
-              "taskName": "这是属于项目三的任务，任务id是5"
+              "taskName": "这是属于项目三的任务，任务id是5",
+              "hour": 1.30
             },
             {
               "taskId": 6,
-              "taskName": "这是属于项目三的任务，任务id是6"
+              "taskName": "这是属于项目三的任务，任务id是6",
+              "hour": 1.30
             }
           ]
         },
@@ -59,11 +64,13 @@
           "tasks": [
             {
               "taskId": 7,
-              "taskName": "这是属于项目四的任务，任务Id是7"
+              "taskName": "这是属于项目四的任务，任务Id是7",
+              "hour": 2.30
             },
             {
               "taskId": 8,
-              "taskName": "这是属于项目四的任务，任务Id是8"
+              "taskName": "这是属于项目四的任务，任务Id是8",
+              "hour": 2.30
             }
           ]
         }
@@ -79,11 +86,13 @@
           "tasks": [
             {
               "taskId": 9,
-              "taskName": "这是属于项目五的任务，任务Id是9"
+              "taskName": "这是属于项目五的任务，任务Id是9",
+              "hour": 1.00
             },
             {
               "taskId": 10,
-              "taskName": "这是属于项目五的任务，任务Id是10"
+              "taskName": "这是属于项目五的任务，任务Id是10",
+              "hour": 1.00
             }
           ]
         },
@@ -93,11 +102,13 @@
           "tasks": [
             {
               "taskId": 11,
-              "taskName": "这是属于项目六的任务，任务Id是11"
+              "taskName": "这是属于项目六的任务，任务Id是11",
+              "hour": 1.00
             },
             {
               "taskId": 12,
-              "taskName": "这是属于项目六的任务，任务Id是12"
+              "taskName": "这是属于项目六的任务，任务Id是12",
+              "hour": 1.00
             }
           ]
         }
@@ -113,11 +124,13 @@
           "tasks": [
             {
               "taskId": 13,
-              "taskName": "这是属于项目七的任务，任务Id是13"
+              "taskName": "这是属于项目七的任务，任务Id是13",
+              "hour": 1.20
             },
             {
               "taskId": 14,
-              "taskName": "这是属于项目七的任务，任务Id是14"
+              "taskName": "这是属于项目七的任务，任务Id是14",
+              "hour": 1.20
             }
           ]
         },
@@ -127,11 +140,13 @@
           "tasks": [
             {
               "taskId": 15,
-              "taskName": "这是属于项目八的任务，任务Id是15"
+              "taskName": "这是属于项目八的任务，任务Id是15",
+              "hour": 1.30
             },
             {
               "taskId": 16,
-              "taskName": "这是属于项目八的任务，任务Id是16"
+              "taskName": "这是属于项目八的任务，任务Id是16",
+              "hour": 1.30
             }
           ]
         }
@@ -147,11 +162,13 @@
           "tasks": [
             {
               "taskId": 17,
-              "taskName": "这是属于项目九的任务，任务Id是17"
+              "taskName": "这是属于项目九的任务，任务Id是17",
+              "hour": 0.30
             },
             {
               "taskId": 18,
-              "taskName": "这是属于项目九的任务，任务Id是18"
+              "taskName": "这是属于项目九的任务，任务Id是18",
+              "hour": 0.30
             }
           ]
         },
@@ -161,11 +178,13 @@
           "tasks": [
             {
               "taskId": 19,
-              "taskName": "这是属于项目十的任务，任务Id是19"
+              "taskName": "这是属于项目十的任务，任务Id是19",
+              "hour": 0.30
             },
             {
               "taskId": 20,
-              "taskName": "这是属于项目十的任务，任务Id是20"
+              "taskName": "这是属于项目十的任务，任务Id是20",
+              "hour": 0.30
             }
           ]
         }
@@ -173,3 +192,11 @@
     }
   ]
 }
+
+
+
+
+
+
+
+

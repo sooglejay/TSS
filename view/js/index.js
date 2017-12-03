@@ -4,7 +4,7 @@
 
 /**
  * 初始化
- * @param daysList 最近5个工作日的日期
+ * @param Date daysList 最近5个工作日的日期
  */
 function initTitle(daysList) {
     // 每周5个工作日，这里硬编码了，daysList的最后一个下标是4
@@ -55,7 +55,7 @@ function getWeekId(daysList) {
  * @param weekId 这个参数用来定位某一周
  */
 function initDaysFromWebData(weekId) {
-    $.getJSON("./../../data.json", {weekId: weekId}, function (data) {
+    $.getJSON("./../../weekData.json", {weekId: weekId}, function (data) {
         initWorkTable(data);
     });
 }
@@ -85,7 +85,10 @@ function init(daysList) {
     initDaysFromWebData(weekId);
 }
 
-
+/**
+ * 表格风格1
+ * @param workData
+ */
 function initWorkTable(workData) {
     var Data = [], itemIndex = 0;
 
@@ -103,7 +106,7 @@ function initWorkTable(workData) {
                 var task = project['tasks'][t];
                 var item = [];
                 item['date'] = dayWork['stamp'];
-                item['hour'] = dayWork['hour'];
+                item['hour'] = project['hour'];
                 item['projectName'] = project['projectName'];
                 item['taskName'] = task['taskName'];
                 Data[itemIndex++] = item;
@@ -154,6 +157,10 @@ function initWorkTable(workData) {
             title: 'Tasks',
             editable: {
                 type: 'select2',
+                multiple: false,
+                maximumSelectionSize: 1, // 限制数量
+
+
                 inputclass: 'input-large',
                 select2: {
                     tags: ['back-end', 'front-end', 'database', 'union test', 'ui'],
@@ -163,6 +170,118 @@ function initWorkTable(workData) {
         }],
         data: Data
     });
+}
+
+/**
+ * 表格风格2
+ * @param workData
+ */
+function initWorkTableEx(workData) {
+    var hours = [0, 0, 0, 0, 0];//每天的工作小时
+    var Data = [], itemIndex = 0;
+    for (var w = 0; workData['work'] && w < workData['work'].length; w++) {//每天
+        var dayWork = workData['work'][w];
+        for (var p = 0; dayWork['projects'] && p < dayWork['projects'].length; p++) {// 每天的项目
+            var project = dayWork['projects'][p];
+            var item = [];
+            item['projectName'] = project['projectName'];
+            item['projectId'] = project['projectId'];
+            item['weekId'] = workData['weekId'];
+            item['tasks'] = project['tasks'];
+            Data[itemIndex++] = item;
+        }
+        hours[w] = dayWork['hour'];
+    }
+
+    var $table = $('#table');
+
+    $table.bootstrapTable({
+            columns: [
+                {
+                    field: 'projectName',
+                    title: 'Projects'
+                },
+
+                {
+                    field: 'tasks',
+                    title: 'Tasks',
+                    editable: {
+                        type: 'select2',
+                        inputclass: 'input-large',
+                        select2: {
+                            multiple: false,
+                            tags: (function () {//动态获取数据
+                                var result = [];
+                                $.ajax({
+                                    url: "./../../tasks.json",
+                                    async: false,
+                                    type: "get",
+                                    data: {},
+                                    success: function (data, status) {
+                                        data = JSON.parse(data);
+                                        var tasks = data.tasks;
+                                        for (var i = 0; i < tasks.length; i++) {
+                                            result[i] = tasks[i];
+                                        }
+                                        console.log(result);
+                                    }
+                                });
+                                return result;
+                            })(),
+                            tokenSeparators: ['\t', ',']
+
+                        }
+
+                    },
+                    formatter: function (value, row, index) {
+                        var tasks = [];
+                        for (var i = 0; i < value.length; i++) {
+                            tasks[i] = value[i]['taskName'];
+                        }
+                        return tasks;
+                    }
+                },
+                {
+                    field: 'Monday',
+                    title: 'Monday',
+                    editable: {
+                        type: 'text'
+                    }
+                }
+                ,
+                {
+                    field: 'Tuesday',
+                    title: 'Tuesday',
+                    editable: {
+                        type: 'text'
+                    }
+                }
+                ,
+                {
+                    field: 'Wednesday',
+                    title: 'Wednesday',
+                    editable: {
+                        type: 'text'
+                    }
+                }
+                ,
+                {
+                    field: 'Thursday',
+                    title: 'Thursday', editable: {
+                    type: 'text'
+                }
+                }
+                ,
+                {
+                    field: 'Friday',
+                    title: 'Friday', editable: {
+                    type: 'text'
+                }
+                }
+            ],
+            data: Data
+        }
+    );
 }
 
 $(function () {
@@ -178,5 +297,26 @@ $(function () {
     $("#btnNextWeek").click(function () {
         var nextWeekDaysList = dayApp.getNextWorkDaysList();
         init(nextWeekDaysList);
+    });
+
+    $("#btnAddRow").click(function () {
+        var allTableData = $('#table').bootstrapTable('getData');
+        $('#table').bootstrapTable('insertRow', {
+            index: allTableData.length,
+            row: {
+                projectName: "jiangwei",
+                tasks: [{taskId: -1, taskName: 'task1'}, {'taskId': -2, taskName: 'tasks2'}],
+                Monday: 8,
+                Tuesday: 8,
+                Wednesday: 8,
+                Thursday: 8,
+                Friday: 8
+            }
+        });
+        var week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];// 一周5个工作日
+        //必须要先更新工作小时，然后再合并单元格
+        for (var j = 0; j < 5; j++) {
+            $table.bootstrapTable('mergeCells', {index: 0, field: week[j], rowspan: 1});
+        }
     });
 });
