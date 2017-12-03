@@ -5,19 +5,19 @@
 function login(userName, password) {
     $.ajax({
         method: 'POST',
-        url: '../../controller/Login.php',
+        url: 'http://localhost:8089/login',
         data: {
             'userName': userName,
             'password': password
         },
         success: function (e) {
             console.log(e);
-            if (e.code == 200) {
-                window.location.href = 'index.html';
-            } else if (e.message) {
-                $("#myModal").modal('show');
-                $(".modal-body").html(e.message);
-            }
+            // if (e.code == 200) {
+            //     window.location.href = 'index.html';
+            // } else if (e.message) {
+            //     $("#myModal").modal('show');
+            //     $(".modal-body").html(e.message);
+            // }
         },
         error: function () {
             $("#myModal").modal('show');

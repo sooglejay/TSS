@@ -7,7 +7,7 @@
  */
 
 namespace TSS;
-
+require_once dirname(__FILE__).'./../bootstrap.php';
 
 class Login extends App
 {

@@ -1,8 +1,8 @@
 <?php
 namespace TSS;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+
 require_once dirname(__FILE__) . '/../model/User.php';
 
 ini_set('date.timezone', 'Asia/Shanghai');
@@ -25,6 +25,7 @@ class Department
      * @var
      */
     protected $departmentName;
+
     /**
      * @return mixed
      */
@@ -63,7 +64,7 @@ class DepartmentRepository extends EntityRepository
             return true;
         } catch (\Exception $e) {
             echo $e->getMessage();
-            return false;
         }
+        return false;
     }
 }
