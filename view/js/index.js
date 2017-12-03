@@ -56,7 +56,7 @@ function getWeekId(daysList) {
  */
 function initDaysFromWebData(weekId) {
     $.getJSON("./../../weekData.json", {weekId: weekId}, function (data) {
-        initWorkTable(data);
+        initWorkTable3(data);
     });
 }
 /**
@@ -284,6 +284,115 @@ function initWorkTableEx(workData) {
     );
 }
 
+/**
+ * 表格风格3
+ * @param workData
+ */
+function initWorkTable3(workData) {
+    var hours = [0, 0, 0, 0, 0];//每天的工作小时
+    var Data = [], itemIndex = 0;
+    for (var w = 0; workData['work'] && w < workData['work'].length; w++) {//每天
+        var dayWork = workData['work'][w];
+        for (var p = 0; dayWork['projects'] && p < dayWork['projects'].length; p++) {// 每天的项目
+            var project = dayWork['projects'][p];
+            var item = [];
+            item['projectName'] = project['projectName'];
+            item['projectId'] = project['projectId'];
+            item['weekId'] = workData['weekId'];
+            item['tasks'] = project['tasks'];
+            Data[itemIndex++] = item;
+        }
+        hours[w] = dayWork['hour'];
+    }
+}
+
+function getTableDataLength() {
+    return getTableData().length;
+}
+function getTableData() {
+    return $('#row_1').parent().children();
+}
+
+/**
+ * 添加一行
+ */
+function addRow() {
+    var rowsLen = getTableDataLength();
+    var newRowIndex = rowsLen + 1;
+    var newRow = '<tr id="row_' + newRowIndex + '">' +
+        '<td id="project_' + newRowIndex + '">Project_' + newRowIndex + '</td>' +
+        '<td id="task_' + newRowIndex + '_1">Tasks_' + newRowIndex + '</td>' +
+        '<td id="day_' + newRowIndex + '_1">8</td>' +
+        '<td id="day_' + newRowIndex + '_2">4</td>' +
+        '<td id="day_' + newRowIndex + '_3">5</td>' +
+        '<td id="day_' + newRowIndex + '_4">6</td>' +
+        '<td id="day_' + newRowIndex + '_5">7</td>' +
+        '<td colspan="3" style="min-width: 120px">' +
+        '<button id="btnAddTask_' + newRowIndex + '" class="btn-default">Add Task</button>' +
+        '<button id="btnEdit_' + newRowIndex + '" class="btn-warning pull-left">Edit</button>' +
+        '<button onclick="removeRow(this)" id="btnDelete_' + newRowIndex + '" class="btn-danger pull-right">Delete</button>' +
+        '</td>' +
+        '</tr>';
+    $('#row_1').before(newRow);
+}
+
+/**
+ * 删除特定的一行
+ * @param obj
+ */
+function removeRow(obj) {
+    var rowsLen = getTableDataLength();
+    var id = obj.id;
+    var removeIndex = Number(id.split('_')[1]);
+    if (removeIndex == rowsLen) {
+        $('#row_' + removeIndex).remove();
+    } else {
+        $('#row_' + removeIndex).remove();
+        var tableData = getTableData();
+        for (var r = removeIndex - 2; r < tableData.length - 1; r++) {
+            var rowData = tableData[r];
+            var row_id_arr = rowData['id'].split('_');
+            rowData['id'] = row_id_arr[0] + "_" + (Number(row_id_arr[1] - 1));
+
+            //某行的全部数据
+            var childNodes = rowData['childNodes'];
+            for (var cell = 0; cell < childNodes.length; cell++) {
+                // 某行某列的数据
+                var columnData = childNodes[cell];
+                // 列id
+                var col_id = columnData['id'];
+                if (col_id.length < 1) {
+                    var actionCol = columnData['childNodes'];
+                    for (var ac = 0; ac < actionCol.length; ac++) {
+                        var acColumnData = actionCol[ac];
+                        // 列id
+                        col_id = acColumnData['id'];
+                        var a = col_id.split('_');
+                        var nI = (Number(a[1]) - 1);
+                        nI = a[0] + "_" + nI;
+                        acColumnData.id = nI;
+                    }
+                    break;
+                }
+                var arr = col_id.split('_');
+                var newIndex = (Number(arr[1]) - 1);
+                var newId = arr[0] + "_" + newIndex;
+                if (newId >= 1) {// id 型如 **_4_3  4代表行号，3代表列号
+                    newId = newId + "_" + arr[2];
+                }
+                // 删除一行后，下面的行的id要修正
+                childNodes[cell].id = newId;
+
+                // 测试的时候，用这个来看效果。只有projectName和taskName是需要调整的，其他不能改
+                // 注意，正式的时候，下面的代码要删除，或者屏蔽
+                if (cell <= 1) {
+                    childNodes[cell].innerHTML = newId;
+                }
+            }
+        }
+    }
+}
+
 $(function () {
     var dayApp = new DayApp();
     var daysList = dayApp.getWorkDaysList(new Date());
@@ -298,25 +407,7 @@ $(function () {
         var nextWeekDaysList = dayApp.getNextWorkDaysList();
         init(nextWeekDaysList);
     });
-
-    $("#btnAddRow").click(function () {
-        var allTableData = $('#table').bootstrapTable('getData');
-        $('#table').bootstrapTable('insertRow', {
-            index: allTableData.length,
-            row: {
-                projectName: "jiangwei",
-                tasks: [{taskId: -1, taskName: 'task1'}, {'taskId': -2, taskName: 'tasks2'}],
-                Monday: 8,
-                Tuesday: 8,
-                Wednesday: 8,
-                Thursday: 8,
-                Friday: 8
-            }
-        });
-        var week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];// 一周5个工作日
-        //必须要先更新工作小时，然后再合并单元格
-        for (var j = 0; j < 5; j++) {
-            $table.bootstrapTable('mergeCells', {index: 0, field: week[j], rowspan: 1});
-        }
+    $('#btnAdd').click(function () {
+        addRow();
     });
 });
