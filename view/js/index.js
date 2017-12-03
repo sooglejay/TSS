@@ -135,6 +135,7 @@ function initWorkTable(workData) {
         (function (index, rowspan) {
             setTimeout(function () {
                 $('#table').bootstrapTable('mergeCells', {index: index, field: 'date', rowspan: rowspan});
+                $('#table').bootstrapTable('mergeCells', {index: index, field: 'hour', rowspan: rowspan});
             }, 3000);
         })(dateRowSpanIndex, rowsCount);
         dateRowSpanIndex += rowsCount;
