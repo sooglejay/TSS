@@ -312,6 +312,11 @@ function getTableDataLength() {
 function getTableData() {
     return $('#row_0').parent().children();
 }
+/**
+ * 从一个id字符串中获取所在行的行号，注意，这个id字符串必须符合 '*_行号数值' 的风格才行
+ * @param idStr
+ * @returns {number}
+ */
 function getRowNumFromIdStr(idStr) {
     var arr = idStr.split('_');
     var id = Number(arr[arr.length - 1]);
@@ -323,61 +328,98 @@ function getRowNumFromIdStr(idStr) {
     }
 }
 
-function getNewTaskHtml(rowNumber, taskNumber) {
-    var html =
+function getTaskTd(taskData, rowNumber) {
+    var taskTd =
+        '<td style="min-width: 150px">' +
+        '<div id="task_wrapper_' + rowNumber + '" align="center">';
+
+    for (var i = 0; i < taskData.length; i++) {
+        taskTd += getNewTaskHtml(rowNumber, (i + 1), generateStrFromMap(taskData[i], "taskName"));
+    }
+    //添加任务按钮
+    taskTd +=
+            '<span onclick="addTask(this)" class="glyphicon glyphicon-play-circle glyphicon-plus-sign" style="margin-top: 5%;cursor: hand"></span>' +
+        '</div>';
+    taskTd += '</td>';
+    return taskTd;
+}
+function getNewTaskHtml(rowNumber, taskNumber, taskName) {
+    var newTaskhtml =
         '<div class="input-group">' +
-        '<input class="form-control" style="width:90%;align-content: center" id="task_input_' + taskNumber + '_' + rowNumber + '" type="text" value="" placeholder="task name">' +
+        '<input class="form-control" style="width:90%;align-content: center" id="task_input_' + taskNumber + '_' + rowNumber + '" type="text" value="' + taskName + '" placeholder="task name">' +
         //删除任务
         '<span onclick="removeTask(this)" class=" glyphicon glyphicon-remove-circle" style="width:1%;margin-top:10px;margin-left:5px;cursor:hand;text-align: center"></span>' +
         '</div>';
-
+    return newTaskhtml;
+}
+/**
+ * 获取操作列的 html内容
+ * @returns {string}
+ */
+function getActionTd() {
+    var html = '<td colspan="2" style="min-width: 120px">' +
+        '<button onclick="editRow(this)" class="btn btn-sm btn-warning pull-left">Edit</button>' +
+        '<button onclick="removeRow(this)" class="btn btn-sm btn-danger pull-right">Delete</button>' +
+        '</td>';
     return html;
-
 }
 
 /**
- * 添加一行
- * id构造的算法是  ***_行号  也就是说行号是id这个字符串的最后一个数值
+ * 用于构造表格单元格的html
+ * @param id 单元格的id
+ * @param inputClass class 属性
+ * @param value 它的值
+ * @param placeholder 若是input，则需要placeholder
+ * @param isEdit 是否可以编辑
+ * @returns {string} 返回最终的字符串
  */
-function addRow() {
+function getCommonCellHtmlStr(id, inputClass, value, placeholder, isEdit) {
+    var html = '';
+    if (isEdit) {//可以编辑，就使用input
+        html = '<td>' +
+            '<input class="' + inputClass + '" id="' + id + '" type="text" value="' + value + '" placeholder="' + placeholder + '">' +
+            '</td>';
+    } else {//不可以编辑，就使用label
+        html = '<td><label  id="' + id + '">' + value + '</label></td>';
+    }
+    return html;
+}
+
+/**
+ * 添加表格的一行
+ * id构造的算法是  ***_行号  也就是说行号是id这个字符串的最后一个数值
+ *
+ * @param rowData 行数据，用于填充该行，如果没有，就写null，或者[]都行
+ * @param isEdit  是否可以编辑
+ */
+function addRow(rowData, isEdit) {
     var newRowIndex = getTableDataLength();
+
+    //项目
+    var projectTd =
+        getCommonCellHtmlStr("project_input_" + newRowIndex, "form-control", generateStrFromMap(rowData, "projectName"), "project name", isEdit);
+
+    //任务
+    var taskTd = getTaskTd(generateStrFromMap(rowData, "tasks"), newRowIndex);
+
+    // 5个工作日的html
+    var daysTd = '';
+    for (var i = 1; i <= 5; i++) {
+        daysTd += getCommonCellHtmlStr("day_input_" + i + "_" + newRowIndex, "day form-control", generateStrFromMap(rowData, "day_" + i), "hours", isEdit);
+    }
+
+    //操作
+    var actionTd = getActionTd();
+
     var newRow =
         //行开始
         '<tr id="row_' + newRowIndex + '">' +
-
-        //项目
-        '<td>' +
-        '<input class="form-control" id="project_input_' + newRowIndex + '" type="text" value="" placeholder="project name">' +
-        '</td>' +
-
-        //任务  宽带可以设置
-        '<td style="min-width: 150px">' +
-        '<div id="task_wrapper_' + newRowIndex + '" align="center">' +
-        getNewTaskHtml(newRowIndex, 1) +
-        //添加任务
-        '<span onclick="addTask(this)" class="glyphicon glyphicon-play-circle glyphicon-plus-sign" style="margin-top: 5%;cursor: hand"></span>' +
-        '</div>' +
-        '</td>' +
-
-        //周一
-        '<td><input  class="day form-control" type="text" id="day_input_1_' + newRowIndex + '" placeholder="hours"/></td>' +
-        //周二
-        '<td><input  class="day form-control" type="text" id="day_input_2_' + newRowIndex + '" placeholder="hours"/></td>' +
-        //周三
-        '<td><input  class="day form-control" type="text" id="day_input_3_' + newRowIndex + '" placeholder="hours"/></td>' +
-        //周四
-        '<td><input  class="day form-control" type="text" id="day_input_4_' + newRowIndex + '" placeholder="hours"/></td>' +
-        //周五
-        '<td><input  class="day form-control" type="text" id="day_input_5_' + newRowIndex + '" placeholder="hours"/></td>' +
-
-        //操作
-        '<td colspan="2" style="min-width: 120px">' +
-        '<button onclick="editRow(this)" class="btn btn-sm btn-warning pull-left">Edit</button>' +
-        '<button onclick="removeRow(this)" class="btn btn-sm btn-danger pull-right">Delete</button>' +
-        '</td>' +
-
+        //各列的数据
+        projectTd + taskTd + daysTd + actionTd +
         //行结束
         '</tr>';
+
+    //添加行，添加在末行的前面
     $('#row_0').before(newRow);
 }
 
@@ -388,7 +430,7 @@ function addRow() {
 function addTask(obj) {
     var newTaskNumber = obj.parentNode.childNodes.length;
     var rowNumber = getRowNumFromIdStr(obj.parentNode.id);
-    var taskHtml = getNewTaskHtml(rowNumber, newTaskNumber);
+    var taskHtml = getNewTaskHtml(rowNumber, newTaskNumber, "");
     $(obj).before(taskHtml);
 }
 
@@ -397,11 +439,21 @@ function addTask(obj) {
  * @param obj
  */
 function removeTask(obj) {
-
+    var currentTaskNum = Number($(obj).siblings('input')[0].id.split('_')[2]);
+    var tasksDiv = $(obj).parent().parent().children();
+    // 减一，是因为 添加任务的按钮不算任务
+    var len = tasksDiv.length;
+    for (var i = currentTaskNum; i < len - 1; i++) {
+        var taskDiv = tasksDiv[i];
+        var arr = $(taskDiv).children('input')[0].id.split('_');
+        arr[2] = Number(arr[2]) - 1;
+        $(taskDiv).children('input')[0].id = arr.join('_');
+    }
+    $(obj).parent().remove();
 }
 
 /**
- * 删除特定的一行
+ * 删除表格的一行
  * @param obj
  */
 function removeRow(obj) {
@@ -420,12 +472,23 @@ function removeRow(obj) {
     }
 }
 
-
 /**
- * 编辑一行
+ * 编辑表格的一行
  * @param obj
  */
 function editRow(obj) {
+    var rowObj = $(obj).parent().parent()[0];
+    var firstChild = rowObj.childNodes[0].childNodes[0];
+    if (firstChild.placeholder && firstChild.placeholder.length > 1) {
+        //当前是编辑状态了
+        return;
+    }
+    var id = rowObj.id;
+    var rowNum = getRowNumFromIdStr(id);
+    var projectName = $('project_input_'+rowNum).val();
+    var taskN = 1;
+    while($('task_input_'+taskN+"_"+rowNum)!=undefined)
+    console.log(id);
 
 }
 
@@ -453,9 +516,22 @@ function modifyId(obj) {
 }
 
 /**
- * 提交数据 一周的数据，目前，不管如何改动，都会把这一周的数据全部提交
+ * 从一个key－value对中获取值
+ * @param obj
+ * @param key
+ * @returns {*}
  */
-function submit() {
+function generateStrFromMap(obj, key) {
+    if (obj == undefined)return "";
+    if (obj.hasOwnProperty(key)) return obj[key];
+    return "";
+}
+
+/**
+ * 提交数据 一周的数据，目前，不管如何改动，都会把这一周的数据全部提交
+ * @param isSave
+ */
+function submit(isSave) {
 
 }
 
@@ -474,6 +550,6 @@ $(function () {
         init(nextWeekDaysList);
     });
     $('#btnAdd').click(function () {
-        addRow();
+        addRow([], true);
     });
 });
