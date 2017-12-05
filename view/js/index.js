@@ -424,6 +424,11 @@ function editRow(obj) {
  */
 function submit(isSave) {
     $('input').attr('disabled', 'disabled');
+
+    // 提交到服务器
+    var tableData = $('#workTable').html();//test
+    // 循环获取表格数据，提交
+    console.log(tableData);
 }
 
 $(function () {
