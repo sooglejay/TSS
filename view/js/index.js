@@ -102,7 +102,7 @@ function setUpTable(data) {
         for (var i = 1; i < work.length; i++) {
             addProject();
             var project = work[i];
-            setUpRowWithData(i+1, project);
+            setUpRowWithData(i + 1, project);
         }
     }
 }
@@ -111,12 +111,12 @@ function setUpRowWithData(rowIndex, projectData) {
 
     var projectName = projectData['projectName'];
     var tasks = projectData['tasks'];
-    $("#input_project_"+rowIndex).val(projectName);
+    $("#input_project_" + rowIndex).val(projectName);
     for (var t = 1; t <= tasks.length; t++) {
         if (t > 1) {
-            addTask($("#addTask"));
+            addTask($("#addTask_" + rowIndex));
         }
-        $('#input_task_' + t + '_'+rowIndex).val(tasks[t - 1]['taskName']);
+        $('#input_task_' + t + '_' + rowIndex).val(tasks[t - 1]['taskName']);
         var dateObj = new Date(tasks[t - 1]['stamp']);
         var day = dateObj.getDay();
         var dayId = "#input_day_" + day + "_" + t + "_" + rowIndex;
@@ -242,7 +242,7 @@ function getNewTaskTr(newTaskNum, projectNum) {
 function getAddTaskTr(newProjectIndex) {
     var addTaskTr =
         '<tr id="row_addTask_' + newProjectIndex + '"> ' +
-        '<td><span onclick="addTask(this)" class="glyphicon glyphicon-play-circle glyphicon-plus-sign" style="margin-top: 5%;cursor: hand"></span>' +
+        '<td><span id="addTask_' + newProjectIndex + '" onclick="addTask(this)" class="glyphicon glyphicon-play-circle glyphicon-plus-sign" style="margin-top: 5%;cursor: hand"></span>' +
         '</td> ' +
         '<td colspan="5"></td> ' +
         '</tr>';
@@ -415,13 +415,15 @@ function modifyId(obj) {
         }
     }
 }
-
+function editRow(obj) {
+    $('input').removeAttr('disabled');
+}
 /**
  * 提交数据 一周的数据，目前，不管如何改动，都会把这一周的数据全部提交
  * @param isSave
  */
 function submit(isSave) {
-
+    $('input').attr('disabled', 'disabled');
 }
 
 $(function () {
@@ -442,4 +444,10 @@ $(function () {
         addProject();
     });
 
+    $('#btnSave').click(function () {
+        submit(true);
+    });
+    $('#btnSubmit').click(function () {
+        submit(false);
+    });
 });
