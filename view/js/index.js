@@ -110,13 +110,16 @@ function setUpTable(data) {
 function setUpRowWithData(rowIndex, projectData) {
 
     var projectName = projectData['projectName'];
+    var projectId = projectData['projectId'];
     var tasks = projectData['tasks'];
-    $("#input_project_" + rowIndex).val(projectName);
+    $("#input_project_" + rowIndex).append('<option value="'+projectId+'">'+projectName+'</option>');
     for (var t = 1; t <= tasks.length; t++) {
         if (t > 1) {
             addTask($("#addTask_" + rowIndex));
         }
-        $('#input_task_' + t + '_' + rowIndex).val(tasks[t - 1]['taskName']);
+        var taskName=tasks[t - 1]['taskName'];
+        var taskId=tasks[t - 1]['taskId'];
+        $('#input_task_' + t + '_' + rowIndex).append('<option value="'+taskId+'">'+taskName+'</option>');
         var dateObj = new Date(tasks[t - 1]['stamp']);
         var day = dateObj.getDay();
         var dayId = "#input_day_" + day + "_" + t + "_" + rowIndex;
@@ -174,12 +177,12 @@ function getProjectTr(newProjectIndex) {
     var projectTr =
         '<tr id="row_' + newProjectIndex + '">' +
         '<td id="td_project_' + newProjectIndex + '" rowspan="2">' +
-        '<input class="form-control" id="input_project_' + newProjectIndex + '" type="text" placeholder="project name"> ' +
+        '<select class="projectName" id="input_project_' + newProjectIndex + '"></select> ' +
         '</td>' +
-        '<td style="min-width: 150px"> ' +
+        '<td class="taskColumn"> ' +
         '<div class="input-group"> ' +
-        '<input class="form-control" style="width:90%;align-content: center" id="input_task_1_' + newProjectIndex + '" type="text" placeholder="task name">' +
-        '<span onclick="removeTask(this)" class=" glyphicon glyphicon-remove-circle" style="width:1%;margin-top:10px;margin-left:5px;cursor:hand;text-align: center">' +
+        '<select class="taskName" id="input_task_1_'+newProjectIndex +'"></select>' +
+        '<span onclick="removeTask(this)" class="removeTask glyphicon glyphicon-remove-circle">' +
         '</span>' +
         '</div> ' +
         '</td>' +
@@ -193,7 +196,7 @@ function getProjectTr(newProjectIndex) {
         '<input class="day form-control" id="input_day_4_1_' + newProjectIndex + '" type="text" placeholder="hours"></td> ' +
         '<td>' +
         '<input class="day form-control" id="input_day_5_1_' + newProjectIndex + '" type="text" placeholder="hours"></td> ' +
-        '<td id="action_' + newProjectIndex + '" colspan="2" rowspan="2" style="min-width: 120px"> ' +
+        '<td id="action_' + newProjectIndex + '" colspan="2" rowspan="2" class="actionColumn"> ' +
         '<button onclick="editRow(this)" class="btn btn-sm btn-warning pull-left">Edit</button> ' +
         '<button onclick="removeProject(this)" class="btn btn-sm btn-danger pull-right">Delete</button> ' +
         '</td>' +
@@ -213,10 +216,10 @@ function getNewTaskTr(newTaskNum, projectNum) {
     var taskTr =
         '<tr id="row_' + newTaskNum + '_' + projectNum + '">' +
 
-        '<td style="min-width: 150px"> ' +
+        '<td class="taskColumn"> ' +
         '<div class="input-group"> ' +
-        '<input class="form-control" style="width:90%;align-content: center" id="input_task_' + newTaskNum + '_' + projectNum + '" type="text" placeholder="task name">' +
-        '<span onclick="removeTask(this)" class=" glyphicon glyphicon-remove-circle" style="width:1%;margin-top:10px;margin-left:5px;cursor:hand;text-align: center">' +
+        '<select class="taskName" id="input_task_' + newTaskNum + '_' + projectNum + '"></select>' +
+        '<span onclick="removeTask(this)" class="removeTask glyphicon glyphicon-remove-circle">' +
         '</span>' +
         '</div></td>' +
         '<td>' +
@@ -242,7 +245,7 @@ function getNewTaskTr(newTaskNum, projectNum) {
 function getAddTaskTr(newProjectIndex) {
     var addTaskTr =
         '<tr id="row_addTask_' + newProjectIndex + '"> ' +
-        '<td><span id="addTask_' + newProjectIndex + '" onclick="addTask(this)" class="glyphicon glyphicon-play-circle glyphicon-plus-sign" style="margin-top: 5%;cursor: hand"></span>' +
+        '<td><span id="addTask_' + newProjectIndex + '" onclick="addTask(this)" class="addTask glyphicon glyphicon-play-circle glyphicon-plus-sign" style="margin-top: 5%;cursor: hand"></span>' +
         '</td> ' +
         '<td colspan="5"></td> ' +
         '</tr>';
@@ -332,7 +335,7 @@ function modifyRowSpan(projectNum, oneWithFlag) {
  */
 function removeTask(obj) {
     // 型如 input_task_2_1
-    var idStr = $(obj).parent().children('input').attr('id');
+    var idStr = $(obj).parent().children('select').attr('id');
 
     var projectNum = Number(idStr.split('_')[3]);
     var allTaskCount = getTaskNumFromProjectNum(projectNum);
@@ -429,14 +432,16 @@ function modifyId(obj) {
 }
 
 function editRow(obj) {
-    $('input').removeAttr('disabled');
+    $('select').removeAttr('disabled');
+    $('.addTask,.removeTask').show();
 }
 /**
  * 提交数据 一周的数据，目前，不管如何改动，都会把这一周的数据全部提交
  * @param isSave
  */
 function submit(isSave) {
-    $('input').attr('disabled', 'disabled');
+    $('select').attr('disabled', 'disabled');
+    $('.addTask,.removeTask').hide();
 
     // 提交到服务器
     var tableData = $('#workTable').html();//test
