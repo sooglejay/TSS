@@ -373,8 +373,20 @@ function removeProject(obj) {
     } else {
         removeProjectByProjectNum(removeIndex);
         for (var r = removeIndex + 1; r <= projectNum; r++) {
+            // 修改之前，先获取该项目一共有多少个任务行
+            var taskNum = getTaskNumFromProjectNum(r);
+
+            // 项目行 tr 修改id
             var projectTr = $('#row_' + r);
             modifyId(projectTr);
+
+            //任务行 tr 修改id，注意任务行的taskNum从2开始的
+            for(var t = 2;t<=taskNum;t++){
+                var taskTr = $('#row_'+t+'_' + r);
+                modifyId(taskTr);
+            }
+
+            //添加任务的按钮行 也要修改id
             var addTaskTr = $('#row_addTask_' + r);
             modifyId(addTaskTr);
         }
@@ -410,11 +422,12 @@ function modifyId(obj) {
         var projectNum = getProjectNumFromIdStr(idStr);
         if (projectNum > 0) {
             var arr = idStr.split('_');
-            projectNum = arr.slice(0, arr.length - 1).join('_') + "_" + (projectNum - 1);
-            $(obj).attr('id', projectNum);
+            var newId = arr.slice(0, arr.length - 1).join('_') + "_" + (projectNum - 1);
+            $(obj).attr('id', newId);
         }
     }
 }
+
 function editRow(obj) {
     $('input').removeAttr('disabled');
 }
