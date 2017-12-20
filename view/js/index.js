@@ -501,7 +501,7 @@ function getTableData() {
                     //空字符串，说明这个任务今天没有做，就传0或者-1，这个可以跟后台协商
                     hours = 0;
                 }
-                if (isFloat(hours)) {
+                if 1(isFloat(hours)) {
                     hours = parseFloat(hours);
                 } else {
                     alert("please check No." + p + " line's " + getWeekDay(d) + "'s hours");
@@ -548,11 +548,11 @@ function submit(isSave) {
 
 function initTable() {
     var trs = $('#workTable').find('tr');
-    for (var tr = 2; tr < trs.length; tr++) {
+    for (var tr = 2; tr < trs.length-1; tr++) {
         if ($(trs[tr]).attr('id') == 'row_addTask_1')continue;
-        if ($(trs[tr]).attr('id') == 'row_0')continue;
         $(trs[tr]).remove();
     }
+    // 初始时候，project列和action列 占2行
     $("#td_project_1").attr('rowSpan',2);
     $("#action_1").attr('rowSpan',2);
 }
