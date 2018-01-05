@@ -7,4 +7,4 @@ vendor/doctrine/orm/docs/en/_theme/
 vendor/doctrine/orm/lib/vendor/
 vendor/symfony/console/Resources/
 composer.lock
-/.idea
+.idea/
